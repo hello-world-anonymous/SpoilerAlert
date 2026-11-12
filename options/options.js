@@ -1,7 +1,7 @@
 'use strict';
 
-const { DEFAULT_SETTINGS, LIST_KEYS, sanitizeSettings, parseList } = globalThis.GTA6Defaults;
-const { createMatcher } = globalThis.GTA6Matcher;
+const { DEFAULT_SETTINGS, LIST_KEYS, sanitizeSettings, parseList } = globalThis.SpoilerDefaults;
+const { createMatcher } = globalThis.SpoilerMatcher;
 const $ = (id) => document.getElementById(id);
 const ALL = ['<all_urls>'];
 
@@ -18,6 +18,12 @@ function read() {
   const raw = { enabled: $('enabled').checked, strict: $('strict').checked, mode };
   for (const k of LIST_KEYS) raw[k] = parseList($(k).value);
   return sanitizeSettings(raw);
+}
+
+function pickLists(s) {
+  const out = {};
+  for (const k of LIST_KEYS) out[k] = s[k];
+  return out;
 }
 
 function status(msg) {
@@ -70,7 +76,7 @@ async function toggleGeneric() {
   // request() must be the first await in the click handler, or Chrome drops the user gesture.
   if (genericGranted) await chrome.permissions.remove({ origins: ALL });
   else await chrome.permissions.request({ origins: ALL });
-  await chrome.runtime.sendMessage({ type: 'gta6ss:syncGeneric' }).catch(() => {});
+  await chrome.runtime.sendMessage({ type: 'spoileralert:syncGeneric' }).catch(() => {});
   await refreshGeneric();
 }
 
@@ -78,7 +84,17 @@ async function main() {
   fill(sanitizeSettings(await chrome.storage.sync.get(null)));
   refreshGeneric();
   $('save').addEventListener('click', save);
-  $('reset').addEventListener('click', () => { fill(sanitizeSettings(DEFAULT_SETTINGS)); status('Defaults loaded. Click Save to keep them.'); });
+  $('reset').addEventListener('click', () => {
+    fill(sanitizeSettings(Object.assign({}, read(), pickLists(DEFAULT_SETTINGS))));
+    status('GTA 6 example loaded. Click Save to keep it.');
+  });
+  $('clear').addEventListener('click', () => {
+    const empty = {};
+    for (const k of LIST_KEYS) empty[k] = [];
+    fill(sanitizeSettings(Object.assign({}, read(), empty)));
+    $('topicTerms').focus();
+    status('Lists cleared. Add your own terms, then click Save.');
+  });
   $('genericToggle').addEventListener('click', toggleGeneric);
   $('tryText').addEventListener('input', updateTry);
   for (const k of LIST_KEYS) $(k).addEventListener('input', updateTry);

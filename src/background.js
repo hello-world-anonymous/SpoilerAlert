@@ -1,5 +1,5 @@
 /*
- * GTA 6 Spoiler Shield: service worker.
+ * SpoilerAlert: service worker.
  *  - per-tab "reveal all for this session" flag (chrome.storage.session, cleared
  *    when the tab closes or the browser restarts)
  *  - toolbar badge with the number of hidden items on the current tab
@@ -9,7 +9,8 @@
  */
 'use strict';
 
-const GENERIC_ID = 'gta6ss-generic';
+const GENERIC_ID = 'spoileralert-generic';
+const LEGACY_GENERIC_ID = 'gta6' + 'ss-generic';
 // Must match manifest.json content_scripts[0].matches.
 const STATIC_MATCHES = [
   '*://*.youtube.com/*',
@@ -24,6 +25,9 @@ const revealKey = (tabId) => 'revealAll:' + tabId;
 
 async function syncGenericRegistration() {
   const granted = await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  // Versions before the SpoilerAlert rename registered under another id.
+  const legacy = await chrome.scripting.getRegisteredContentScripts({ ids: [LEGACY_GENERIC_ID] });
+  if (legacy.length) await chrome.scripting.unregisterContentScripts({ ids: [LEGACY_GENERIC_ID] });
   const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [GENERIC_ID] });
   if (granted && !existing.length) {
     await chrome.scripting.registerContentScripts([{
@@ -52,7 +56,7 @@ async function setRevealAll(tabId, value) {
   if (value) await chrome.storage.session.set({ [revealKey(tabId)]: true });
   else await chrome.storage.session.remove(revealKey(tabId));
   try {
-    return await chrome.tabs.sendMessage(tabId, { type: 'gta6ss:revealAll', value: !!value });
+    return await chrome.tabs.sendMessage(tabId, { type: 'spoileralert:revealAll', value: !!value });
   } catch (_) {
     return null; // no content script on that tab
   }
@@ -64,28 +68,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const fromExtensionPage = !sender.tab;
 
   switch (msg.type) {
-    case 'gta6ss:hello':
+    case 'spoileralert:hello':
       getRevealAll(tabId).then((revealAll) => sendResponse({ tabId, revealAll }));
       return true;
 
-    case 'gta6ss:count':
+    case 'spoileralert:count':
       if (tabId != null) {
         const n = Number(msg.count) || 0;
         chrome.action.setBadgeText({ tabId, text: n ? String(Math.min(n, 999)) : '' });
       }
       return;
 
-    case 'gta6ss:getTabState':
+    case 'spoileralert:getTabState':
       if (!fromExtensionPage) return;
       getRevealAll(msg.tabId).then((revealAll) => sendResponse({ revealAll }));
       return true;
 
-    case 'gta6ss:setRevealAll':
+    case 'spoileralert:setRevealAll':
       if (!fromExtensionPage) return;
       setRevealAll(msg.tabId, msg.value).then(sendResponse);
       return true;
 
-    case 'gta6ss:syncGeneric':
+    case 'spoileralert:syncGeneric':
       if (!fromExtensionPage) return;
       syncGenericRegistration().then((granted) => sendResponse({ granted }), (e) => sendResponse({ error: String(e) }));
       return true;

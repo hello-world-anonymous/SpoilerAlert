@@ -1,25 +1,25 @@
 /*
- * GTA 6 Spoiler Shield: content script.
+ * SpoilerAlert: content script.
  *
  * Finds card-like containers (via the site adapter), reads their text plus
  * alt / aria-label / title attributes, asks the matcher, and marks matches
- * with data-gta6ss-* attributes. All visual hiding is done by content.css.
+ * with data-spoileralert-* attributes. All visual hiding is done by content.css.
  * Makes no network requests.
  */
 (() => {
   'use strict';
-  if (globalThis.__gta6ssLoaded) return;
-  globalThis.__gta6ssLoaded = true;
+  if (globalThis.__spoileralertLoaded) return;
+  globalThis.__spoileralertLoaded = true;
 
-  const { createMatcher } = globalThis.GTA6Matcher;
-  const { sanitizeSettings, DEFAULT_SETTINGS } = globalThis.GTA6Defaults;
-  // __GTA6SS_FORCE_ADAPTER is only visible to the fixtures harness: in a real
+  const { createMatcher } = globalThis.SpoilerMatcher;
+  const { sanitizeSettings, DEFAULT_SETTINGS } = globalThis.SpoilerDefaults;
+  // __SPOILERALERT_FORCE_ADAPTER is only visible to the fixtures harness: in a real
   // extension the content script runs in an isolated world pages cannot write to.
-  const adapter = globalThis.GTA6Adapters.pick(location.hostname, globalThis.__GTA6SS_FORCE_ADAPTER);
+  const adapter = globalThis.SpoilerAdapters.pick(location.hostname, globalThis.__SPOILERALERT_FORCE_ADAPTER);
 
-  const STATE = 'data-gta6ss-state'; // "blocked" | "revealed"
-  const MODE = 'data-gta6ss-mode';
-  const OUR_ATTRS = [STATE, MODE, 'data-gta6ss-reason', 'data-gta6ss-pos', 'data-gta6ss-display', 'data-gta6ss-size'];
+  const STATE = 'data-spoileralert-state'; // "blocked" | "revealed"
+  const MODE = 'data-spoileralert-mode';
+  const OUR_ATTRS = [STATE, MODE, 'data-spoileralert-reason', 'data-spoileralert-pos', 'data-spoileralert-display', 'data-spoileralert-size'];
   const DEBOUNCE_MS = 150;
   const MAX_WAIT_MS = 600;
   const CHUNK_MS = 12;
@@ -128,14 +128,14 @@
     // An outer card now covers anything we hid inside it.
     for (const d of el.querySelectorAll('[' + STATE + ']')) { clear(d); seen.delete(d); }
     el.setAttribute(MODE, settings.mode);
-    el.setAttribute('data-gta6ss-reason', res.reason || '');
+    el.setAttribute('data-spoileralert-reason', res.reason || '');
     el.setAttribute(STATE, 'blocked');
     if (settings.mode === 'blur') {
       const cs = getComputedStyle(el);
-      if (cs.display === 'contents') el.setAttribute('data-gta6ss-display', 'block');
-      if (cs.position === 'static') el.setAttribute('data-gta6ss-pos', 'relative');
+      if (cs.display === 'contents') el.setAttribute('data-spoileralert-display', 'block');
+      if (cs.position === 'static') el.setAttribute('data-spoileralert-pos', 'relative');
       const h = el.getBoundingClientRect().height;
-      if (h > 0 && h < 56) el.setAttribute('data-gta6ss-size', 'small');
+      if (h > 0 && h < 56) el.setAttribute('data-spoileralert-size', 'small');
     }
   }
 
@@ -356,7 +356,7 @@
     const { blocked } = counts();
     if (blocked !== lastCountSent) {
       lastCountSent = blocked;
-      send({ type: 'gta6ss:count', count: blocked });
+      send({ type: 'spoileralert:count', count: blocked });
     }
   }
 
@@ -402,9 +402,9 @@
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (!msg || typeof msg.type !== 'string') return;
-    if (msg.type === 'gta6ss:getStats') {
+    if (msg.type === 'spoileralert:getStats') {
       sendResponse(Object.assign(counts(), { enabled: settings.enabled, mode: settings.mode, revealAll, adapter: adapter.id }));
-    } else if (msg.type === 'gta6ss:revealAll') {
+    } else if (msg.type === 'spoileralert:revealAll') {
       setRevealAll(msg.value);
       sendResponse(Object.assign(counts(), { revealAll }));
     }
@@ -424,12 +424,12 @@
     let raw = {};
     try { raw = await chrome.storage.sync.get(null); } catch (_) { /* use defaults */ }
     try {
-      const r = await send({ type: 'gta6ss:hello' });
+      const r = await send({ type: 'spoileralert:hello' });
       revealAll = !!(r && r.revealAll);
     } catch (_) { /* no service worker: no tab-session reveal */ }
     applySettings(raw);
   })();
 
   // Exposed for the fixtures harness only (isolated world in the real extension).
-  globalThis.__gta6ssDebug = { counts, flushNow: flush, adapter: adapter.id };
+  globalThis.__spoileralertDebug = { counts, flushNow: flush, adapter: adapter.id };
 })();

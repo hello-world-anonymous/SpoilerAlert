@@ -1,10 +1,10 @@
-/* GTA 6 Spoiler Shield: styles for elements the content script marks. */
+/* SpoilerAlert: styles for elements the content script marks. */
 
-[data-gta6ss-pos="relative"] { position: relative !important; }
-[data-gta6ss-display="block"] { display: block !important; }
+[data-spoileralert-pos="relative"] { position: relative !important; }
+[data-spoileralert-display="block"] { display: block !important; }
 
 /* ---------- Blur + click to reveal (default) ---------- */
-[data-gta6ss-state="blocked"][data-gta6ss-mode="blur"] {
+[data-spoileralert-state="blocked"][data-spoileralert-mode="blur"] {
   isolation: isolate !important;
   cursor: pointer !important;
   user-select: none !important;
@@ -12,8 +12,8 @@
 
 /* A frosted overlay above the card. backdrop-filter blurs the card's own
    content (text, thumbnail, shadow DOM) while the label stays readable. */
-[data-gta6ss-state="blocked"][data-gta6ss-mode="blur"]::after {
-  content: "Possible GTA 6 spoiler \2014  click to reveal" !important;
+[data-spoileralert-state="blocked"][data-spoileralert-mode="blur"]::after {
+  content: "Possible spoiler \2014  click to reveal" !important;
   position: absolute !important;
   inset: 0 !important;
   z-index: 2147483647 !important;
@@ -42,7 +42,7 @@
   height: auto !important;
 }
 
-[data-gta6ss-state="blocked"][data-gta6ss-mode="blur"][data-gta6ss-size="small"]::after {
+[data-spoileralert-state="blocked"][data-spoileralert-mode="blur"][data-spoileralert-size="small"]::after {
   content: "Spoiler \00b7  reveal" !important;
   font-size: 11px !important;
   padding: 0 4px !important;
@@ -50,12 +50,12 @@
 }
 
 /* ---------- Collapse / hide ---------- */
-[data-gta6ss-state="blocked"][data-gta6ss-mode="collapse"] {
+[data-spoileralert-state="blocked"][data-spoileralert-mode="collapse"] {
   display: none !important;
 }
 
 /* ---------- Placeholder ---------- */
-[data-gta6ss-state="blocked"][data-gta6ss-mode="placeholder"] {
+[data-spoileralert-state="blocked"][data-spoileralert-mode="placeholder"] {
   display: block !important;
   position: relative !important;
   visibility: hidden !important;
@@ -68,8 +68,8 @@
   user-select: none !important;
 }
 
-[data-gta6ss-state="blocked"][data-gta6ss-mode="placeholder"]::before {
-  content: "Hidden: possible GTA 6 spoiler  (click to show)" !important;
+[data-spoileralert-state="blocked"][data-spoileralert-mode="placeholder"]::before {
+  content: "Hidden: possible spoiler  (click to show)" !important;
   visibility: visible !important;
   display: flex !important;
   align-items: center !important;

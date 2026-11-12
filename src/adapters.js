@@ -13,8 +13,8 @@
  *                 inside posts). false: nested units are covered by the outer one.
  *   attrs         extra attributes whose values count as text
  *   context(el)   optional; returns an Element or string describing what the
- *                 unit sits inside. If that context mentions GTA 6, the unit only
- *                 needs a spoiler term (e.g. a comment under a GTA 6 video).
+ *                 unit sits inside. If that context mentions a topic term, the unit only
+ *                 needs a spoiler term (e.g. a comment under a video about the topic).
  *   acceptUnit(el) optional; return false to treat a selector match as "not a
  *                 card" (its inner cards are judged instead)
  *   textOf(el)    optional; return a string to use as the unit's text instead
@@ -152,7 +152,7 @@
     maxUnitText: 1500,
     excludeNested: false,
     attrs: [],
-    // Paragraphs inside a long article that is about GTA 6 only need a spoiler term.
+    // Paragraphs inside a long article about the topic only need a spoiler term.
     context(el) {
       const art = el.closest('article, [role="article"]');
       if (art && art !== el && (art.textContent || '').length > 1500) return art;
@@ -186,5 +186,5 @@
     return finalize(a || generic);
   }
 
-  root.GTA6Adapters = { pick, ids: SITE_ADAPTERS.concat(generic).map((a) => a.id) };
+  root.SpoilerAdapters = { pick, ids: SITE_ADAPTERS.concat(generic).map((a) => a.id) };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

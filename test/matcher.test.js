@@ -110,6 +110,21 @@ test('context topic: comments under a GTA 6 video/thread', () => {
   assert.equal(m.hasTopic('/r/GTA5/'), false);
 });
 
+test('works for any title: a TV-show config', () => {
+  const tv = createMatcher({
+    topicTerms: ['Severance', '#SeveranceS3'],
+    spoilerTerms: ['Mark', 'Helly', 'finale', 'dies', 'ending'],
+    alwaysBlock: ['Innie Helly reveal'],
+    excludeTerms: ['Severance pay', 'severance package'],
+  });
+  assert.equal(blocked(tv, 'Severance finale breakdown'), true);
+  assert.equal(blocked(tv, '#SeveranceS3 Helly’s choice'), true);
+  assert.equal(blocked(tv, 'Severance season 3 release date'), false); // topic only
+  assert.equal(blocked(tv, 'Severance pay rules: what happens if your boss dies'), false); // excluded look-alike
+  assert.equal(blocked(tv, 'innie helly reveal was wild'), true);
+  assert.equal(blocked(tv, 'GTA 6 ending leaked'), false); // GTA preset not active
+});
+
 test('empty and odd configs are safe', () => {
   const e = createMatcher({});
   assert.equal(blocked(e, 'GTA 6 ending'), false);

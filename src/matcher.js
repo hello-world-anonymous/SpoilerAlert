@@ -1,14 +1,14 @@
 /*
- * GTA 6 Spoiler Shield: spoiler matcher.
+ * SpoilerAlert: spoiler matcher.
  *
  * Pure module: no DOM, no chrome.* APIs, no network. Works as a classic
- * content script (exposes globalThis.GTA6Matcher) and as a CommonJS module
+ * content script (exposes globalThis.SpoilerMatcher) and as a CommonJS module
  * (require('./matcher.js')) for unit tests.
  */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.GTA6Matcher = api;
+  else root.SpoilerMatcher = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 

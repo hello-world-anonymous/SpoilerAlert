@@ -54,7 +54,7 @@ const server = http.createServer((req, res) => {
 });
 
 function run(url, extraArgs) {
-  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'gta6ss-'));
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'spoileralert-'));
   const args = [
     '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
     `--user-data-dir=${profile}`, '--virtual-time-budget=15000', '--window-size=1100,1600',
@@ -69,7 +69,7 @@ function run(url, extraArgs) {
 }
 
 function parse(dom) {
-  const m = dom.match(/<pre id="gta6ss-results">([\s\S]*?)<\/pre>/);
+  const m = dom.match(/<pre id="spoileralert-results">([\s\S]*?)<\/pre>/);
   if (!m) return null;
   const json = m[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
   try { return JSON.parse(json); } catch (_) { return null; }

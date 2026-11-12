@@ -1,11 +1,11 @@
 /*
- * Default settings and settings sanitizer. Shared by the content script,
+ * Default settings (a GTA 6 example preset; users replace the lists for other titles) and settings sanitizer. Shared by the content script,
  * popup, options page and service worker. No DOM access.
  */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.GTA6Defaults = api;
+  else root.SpoilerDefaults = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 

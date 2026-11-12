@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "GTA 6 Spoiler Shield",
-  "version": "1.0.0",
-  "description": "Blurs or hides GTA 6 spoilers on YouTube, Reddit, Instagram, Facebook and (opt-in) any other site. Runs fully offline.",
+  "name": "SpoilerAlert",
+  "version": "1.1.0",
+  "description": "Blurs or hides spoilers for any game, movie or show you choose, on YouTube, Reddit, Instagram, Facebook and more. Offline.",
   "minimum_chrome_version": "110",
   "permissions": ["storage", "scripting"],
   "optional_host_permissions": ["<all_urls>"],
@@ -10,7 +10,7 @@
     "service_worker": "src/background.js"
   },
   "action": {
-    "default_title": "GTA 6 Spoiler Shield",
+    "default_title": "SpoilerAlert",
     "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

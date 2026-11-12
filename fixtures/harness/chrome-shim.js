@@ -41,7 +41,7 @@
     runtime: {
       sendMessage: async (msg) => {
         sent.push(msg);
-        if (msg.type === 'gta6ss:hello') return { tabId: 1, revealAll: false };
+        if (msg.type === 'spoileralert:hello') return { tabId: 1, revealAll: false };
         return undefined;
       },
       onMessage: { addListener: (l) => messageListeners.push(l) },

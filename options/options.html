@@ -3,15 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GTA 6 Spoiler Shield settings</title>
+  <title>SpoilerAlert settings</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
   <main>
-    <h1>GTA 6 Spoiler Shield</h1>
-    <p class="lead">An element is hidden when it mentions a <b>topic term</b> and a <b>spoiler term</b>,
-      or any <b>always-block phrase</b>. Matching ignores case, accents, punctuation and extra spaces,
-      and only matches whole words. One term per line.</p>
+    <h1>SpoilerAlert</h1>
+    <p class="lead">Blocks spoilers for <b>anything you configure</b>: a game, movie, TV show, book, or sports match.
+      An item is hidden when it mentions a <b>topic term</b> (what you're avoiding) <b>and</b> a <b>spoiler term</b>
+      (names, "ending", "dies"…), or any <b>always-block phrase</b>. Matching ignores case, accents, punctuation
+      and extra spaces, and only matches whole words. One term per line.</p>
+    <p class="lead">The lists below start with a <b>GTA 6 example</b>. To protect something else, click
+      <b>Clear all lists</b>, type your own terms, and click <b>Save</b>. You can keep several titles at once:
+      every topic term is combined with every spoiler term.</p>
 
     <section class="card">
       <h2>Behavior</h2>
@@ -22,43 +26,44 @@
         <legend>Display mode</legend>
         <label class="check"><input type="radio" name="mode" value="blur"> Blur, click to reveal (default)</label>
         <label class="check"><input type="radio" name="mode" value="collapse"> Collapse / hide completely</label>
-        <label class="check"><input type="radio" name="mode" value="placeholder"> Replace with "Hidden: possible GTA 6 spoiler"</label>
+        <label class="check"><input type="radio" name="mode" value="placeholder"> Replace with "Hidden: possible spoiler"</label>
       </fieldset>
     </section>
 
     <section class="grid">
       <div class="card">
         <h2><label for="topicTerms">Topic terms</label></h2>
-        <p class="hint">What counts as "about GTA 6". Spaces inside a term are optional ("GTA 6" also matches "GTA6", "gta-6").</p>
+        <p class="hint">The titles you don't want spoiled, with their common spellings, e.g. "GTA 6", "Dune Part Three", "Severance", "#SeveranceS3". Spaces inside a term are optional ("GTA 6" also matches "GTA6", "gta-6").</p>
         <textarea id="topicTerms" rows="10" spellcheck="false"></textarea>
       </div>
       <div class="card">
         <h2><label for="spoilerTerms">Spoiler terms</label></h2>
-        <p class="hint">Characters, places and words like "ending". Terms of 4+ letters also match plurals ("mission" → "missions"). Add new names here.</p>
+        <p class="hint">Character and actor names, places, and words like "ending", "dies", "twist", "finale", "leak". Terms of 4+ letters also match plurals ("mission" → "missions").</p>
         <textarea id="spoilerTerms" rows="10" spellcheck="false"></textarea>
       </div>
       <div class="card">
         <h2><label for="alwaysBlock">Always-block phrases</label></h2>
-        <p class="hint">Hidden on their own, even without a topic term. Use specific phrases, e.g. a full character name plus "dies".</p>
+        <p class="hint">Hidden on their own, even without a topic term: leakers, spoiler accounts, or very specific phrases like "Mark S dies".</p>
         <textarea id="alwaysBlock" rows="6" spellcheck="false"></textarea>
       </div>
       <div class="card">
-        <h2><label for="excludeTerms">Never counts as GTA 6</label></h2>
-        <p class="hint">Removed before looking for topic terms, so "GTA 5" or "GTA Online" never satisfy the topic requirement.</p>
+        <h2><label for="excludeTerms">Never counts as the topic</label></h2>
+        <p class="hint">Look-alikes that should not count, e.g. earlier entries in a series ("GTA 5", "Dune Part Two"). They are ignored when looking for topic terms.</p>
         <textarea id="excludeTerms" rows="6" spellcheck="false"></textarea>
       </div>
     </section>
 
     <div class="actions">
       <button id="save" type="button">Save</button>
-      <button id="reset" type="button" class="secondary">Reset to defaults</button>
+      <button id="clear" type="button" class="secondary">Clear all lists</button>
+      <button id="reset" type="button" class="secondary">Load GTA 6 example</button>
       <span id="status" role="status"></span>
     </div>
 
     <section class="card">
       <h2><label for="tryText">Try it</label></h2>
       <p class="hint">Paste a headline to see whether the current (unsaved) lists would hide it.</p>
-      <input id="tryText" type="text" placeholder="e.g. GTA 6 leak reveals Lucia's ending">
+      <input id="tryText" type="text" placeholder="e.g. Severance finale: who dies?">
       <p id="tryResult" class="result"></p>
     </section>
 

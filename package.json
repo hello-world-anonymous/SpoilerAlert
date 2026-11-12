@@ -1,8 +1,8 @@
 {
-  "name": "gta6-spoiler-shield",
-  "version": "1.0.0",
+  "name": "spoileralert",
+  "version": "1.1.0",
   "private": true,
-  "description": "Chrome extension (MV3) that blurs or hides GTA 6 spoilers. No build step.",
+  "description": "Chrome extension (MV3) that blurs or hides spoilers for anything you configure (GTA 6 preset included). No build step.",
   "scripts": {
     "test": "node --test test/",
     "test:fixtures": "node scripts/run-fixtures.js",

@@ -1,6 +1,6 @@
 'use strict';
 
-const { sanitizeSettings } = globalThis.GTA6Defaults;
+const { sanitizeSettings } = globalThis.SpoilerDefaults;
 const $ = (id) => document.getElementById(id);
 
 let tabId = null;
@@ -18,7 +18,7 @@ async function refreshStats() {
   const s = sanitizeSettings(await chrome.storage.sync.get(null));
   let stats = null;
   if (tabId != null) {
-    try { stats = await chrome.tabs.sendMessage(tabId, { type: 'gta6ss:getStats' }); } catch (_) { stats = null; }
+    try { stats = await chrome.tabs.sendMessage(tabId, { type: 'spoileralert:getStats' }); } catch (_) { stats = null; }
   }
   const btn = $('reveal');
   if (!stats) {
@@ -64,7 +64,7 @@ async function main() {
 
   $('reveal').addEventListener('click', async () => {
     if (tabId == null) return;
-    await chrome.runtime.sendMessage({ type: 'gta6ss:setRevealAll', tabId, value: !revealAll });
+    await chrome.runtime.sendMessage({ type: 'spoileralert:setRevealAll', tabId, value: !revealAll });
     setTimeout(refreshStats, 250);
   });
 

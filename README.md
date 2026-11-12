@@ -1,58 +1,71 @@
-# GTA 6 Spoiler Shield
+# SpoilerAlert
 
-A Chrome extension (Manifest V3, plain JavaScript, no build step) that blurs, hides, or replaces GTA 6 spoilers on YouTube, Reddit, Instagram, Facebook, and, if you opt in, on every other site.
+**Block spoilers for anything you choose: games, movies, TV shows, books, sports.** SpoilerAlert is a Chrome extension (Manifest V3, plain JavaScript, no build step) that blurs, hides, or replaces spoilers on YouTube, Reddit, Instagram, Facebook, and, if you opt in, every other site.
+
+It ships with a **GTA 6 example configuration**. Swap in your own titles and names on the Options page and it protects whatever you're waiting for.
 
 Everything runs locally. The extension makes no network requests, loads no remote code, and collects no analytics.
 
+> **New here? Follow the [step-by-step install guide](INSTALL.md).** No coding needed.
+
 ## Install (load unpacked)
 
-1. Open `chrome://extensions`.
-2. Turn on **Developer mode** (top right).
-3. Click **Load unpacked** and select this folder (the one containing `manifest.json`).
-4. Pin the extension from the puzzle-piece menu if you want quick access to the popup.
-5. Optional: to cover news sites and every other page, open the extension's **Options** page and click **Allow on all websites**. See [Permissions](#permissions-and-the-tradeoff).
+1. Download this repo (**Code → Download ZIP**) and unzip it, or `git clone` it.
+2. Open `chrome://extensions`.
+3. Turn on **Developer mode** (top right).
+4. Click **Load unpacked** and select the folder that contains `manifest.json`.
+5. Pin the extension from the puzzle-piece menu for quick access to the popup.
+6. Optional: to cover news sites and every other page, open **Options** and click **Allow on all websites**. See [Permissions](#permissions-and-the-tradeoff).
 
 After editing any file, click the reload icon on the extension's card in `chrome://extensions`, then reload the open tabs.
+
+## Set it up for your own spoilers
+
+Open **Options** (popup → "Edit keywords and settings"), click **Clear all lists**, fill in the four lists (one term per line), then click **Save**. Open tabs update immediately.
+
+| List | What goes in it | Movie example | TV example | Sports example |
+|---|---|---|---|---|
+| **Topic terms** | The title you're avoiding, plus spellings and hashtags | `Dune Part Three`, `Dune 3`, `#DuneMovie` | `Severance`, `#SeveranceS3` | `Champions League final`, `UCL final` |
+| **Spoiler terms** | Character/actor names, places, and spoiler words | `Paul`, `Chani`, `ending`, `dies`, `twist`, `post-credits` | `Mark`, `Helly`, `finale`, `dies`, `reveal` | `score`, `wins`, `beat`, `goal`, `highlights`, `result` |
+| **Always-block phrases** | Hidden even without the title: leakers, spoiler accounts, very specific phrases | `Dune 3 leaked script` | `Innie Helly reveal` | `UCL final result` |
+| **Never counts as the topic** | Look-alikes that should *not* count | `Dune Part Two`, `Dune 1984` | `severance pay`, `severance package` | `Europa League final` |
+
+An item is hidden when it mentions a **topic term and a spoiler term**, or any **always-block phrase**. "Severance season 3 release date" stays visible; "Severance finale: Helly's choice" is hidden. You can protect several titles at once: put all their topic terms and spoiler terms in the same lists.
+
+**Tips**
+- Use the **Try it** box on the Options page to test a headline against your *unsaved* lists before saving.
+- Turn on **Strict mode** to hide *everything* that mentions the title, spoiler words or not. This is useful for the week before you watch something.
+- Short or common names ("Mark", "Cal") only count when the title is also mentioned, which keeps false positives down. Put them in **Spoiler terms**, not **Always-block**.
+- **Load GTA 6 example** restores the shipped GTA 6 lists.
 
 ## How matching works
 
 The matcher (`src/matcher.js`) is a pure module with no DOM access and is unit-tested in Node.
 
-An element is hidden when **any** of these is true:
+An element is hidden when **any** of these is true (examples use the GTA 6 preset):
 
 | Rule | Example that is hidden | Example that stays visible |
 |---|---|---|
 | A **topic term** and a **spoiler term** appear in the same element | "GTA 6 leak shows Lucia" | "GTA 6 trailer 3 drops Tuesday" |
-| An **always-block phrase** appears, even on its own | (if you add "Lucia dies") "I can't believe Lucia dies" | |
+| An **always-block phrase** appears, even on its own | "New post from @cyberleek" | |
 | **Strict mode** is on and a topic term appears | "GTA 6 price predictions" | "GTA 5 is still selling" |
-| The element is a **comment or paragraph whose surroundings are about GTA 6** and it contains a spoiler term (see below) | Comment "Lucia dies at the end??" under a GTA 6 video | Comment "first!" under the same video |
+| The element is a **comment or paragraph whose surroundings are about the topic** and it contains a spoiler term (see below) | Comment "Lucia dies at the end??" under a GTA 6 video | Comment "first!" under the same video |
 
-Normalization: text is converted with Unicode NFKD, diacritics are stripped, and everything is lowercased. Runs of punctuation and whitespace collapse into one space, and spaced or dotted acronyms are joined ("G.T.A. 6" becomes "gta 6"). So `ＧＴＡ６`, `gta-6`, `#GTA6`, `GTA   6` and `Lúcía` all match. Matching respects word boundaries: "Cal" does not match "calendar", "dead" does not match "deadline", and "GTA 6" does not match "GTA 60".
+Normalization: text is converted with Unicode NFKD, diacritics are stripped, and everything is lowercased. Runs of punctuation and whitespace collapse into one space, and spaced or dotted acronyms are joined ("G.T.A. 6" becomes "gta 6"). So `ＧＴＡ６`, `gta-6`, `#GTA6`, `GTA   6` and `Lúcía` all match. Matching respects word boundaries: "Cal" does not match "calendar", "dead" does not match "deadline", and "GTA 6" does not match "GTA 60". Spaces inside a term are optional, so `Cyber Leek` also matches `cyberleek`. Spoiler terms of 4+ letters also match plurals ("mission" → "missions").
 
-**GTA 5 / Online / San Andreas.** The "Never counts as GTA 6" list (GTA 5, GTA V, GTA Online, GTA San Andreas, GTA IV, GTA Vice City, …) is removed from the text before the topic check. "GTA 5 ending: Michael dies" is therefore not hidden, even in strict mode. "GTA 5 vs GTA 6: the ending compared" is still hidden, because a real GTA 6 mention plus a spoiler term remains. This list also matters if you add a broad topic term such as just "GTA".
+**Look-alikes.** The "Never counts as the topic" list is removed from the text before the topic check. With the GTA 6 preset, "GTA 5 ending: Michael dies" is not hidden, even in strict mode, while "GTA 5 vs GTA 6: the ending compared" still is, because a real GTA 6 mention plus a spoiler term remains.
 
-### Editing the keyword lists
-
-Open the extension's **Options** page (popup → "Edit keywords and settings", or right-click the toolbar icon → Options). It has four lists, one term per line:
-
-- **Topic terms**: what counts as "about GTA 6". Spaces inside a term are optional, so "GTA 6" also matches "GTA6".
-- **Spoiler terms**: character names, places, and words like "ending". Add new names here as you learn them.
-- **Always-block phrases**: hidden with no topic term needed. Keep these specific, e.g. a full name plus "dies".
-- **Never counts as GTA 6**: exclusions (see above).
-
-The **Try it** box shows live whether a headline would be hidden by your *unsaved* lists, and why. Click **Save** (or press Ctrl/Cmd+S). Open tabs pick up changes immediately. Settings sync through `chrome.storage.sync`.
-
-To change the shipped defaults, edit `DEFAULT_SETTINGS` in `src/defaults.js`.
+Settings sync across your Chrome profile via `chrome.storage.sync`. To change the shipped defaults, edit `DEFAULT_SETTINGS` in `src/defaults.js`.
 
 ## Display modes
 
 Set the mode in the popup or on the Options page:
 
-- **Blur, click to reveal** (default). A frosted overlay reading "Possible GTA 6 spoiler — click to reveal" covers the card. The first click (or Enter/Space) reveals the card instead of following its link, and hovering does not trigger the card's own behavior, such as YouTube's inline preview.
+- **Blur, click to reveal** (default). A frosted overlay reading "Possible spoiler — click to reveal" covers the card. The first click (or Enter/Space) reveals the card instead of following its link, and hovering does not trigger the card's own behavior, such as YouTube's inline preview.
 - **Collapse / hide**. The card is removed from the layout (`display: none`).
-- **Placeholder**. The card is replaced with a 48px bar reading "Hidden: possible GTA 6 spoiler (click to show)".
+- **Placeholder**. The card is replaced with a 48px bar reading "Hidden: possible spoiler (click to show)".
 
-The extension acts on the nearest card-like container (a video tile, post, comment, feed item, or news card), not on the whole page. All hiding is done with CSS attached to `data-gta6ss-*` attributes. The extension never inserts or removes the site's own DOM nodes, which avoids breaking React and Polymer apps.
+The extension acts on the nearest card-like container (a video tile, post, comment, feed item, or news card), not on the whole page. All hiding is done with CSS attached to `data-spoileralert-*` attributes. The extension never inserts or removes the site's own DOM nodes, which avoids breaking React and Polymer apps.
 
 **How long reveals last**
 - A card you click is revealed until the page reloads. If the site later reuses that DOM node for different content (YouTube does this), the new content is checked again.
@@ -107,7 +120,7 @@ A spoiler-laden thumbnail on a video with a neutral title and no alt text **will
 
 No `tabs`, `activeTab`, `webRequest`, `history` or `cookies` permission is used. The popup gets the active tab's id from `chrome.tabs.query`, which needs no permission when no URL is read.
 
-## Defaults chosen where the spec was open
+## Default settings and design choices
 
 - Extra default spoiler terms beyond the spec: `spoiler`, `death`, `betrayal`, `cutscene`, `storyline`, plus leaked-material wording: `footage`, `gameplay`, `datamine(d)`, `early copy`, `insider`. These also hide official "gameplay trailer" posts; remove them in Options if you only care about story spoilers. The always-block list starts with `Cyber Leek` (a leaker; also matches `cyberleek`, `@cyberleek`, `Cyber-Leek`).
 - Topic variants: GTA 6 / GTA6 / GTA-6 / GTA VI / GTAVI / GTA Six / Grand Theft Auto 6 / VI / Six.
@@ -121,7 +134,7 @@ No `tabs`, `activeTab`, `webRequest`, `history` or `cookies` permission is used.
 
 ## How it works (performance)
 
-- One `MutationObserver` on the document watches `childList`, `characterData`, and the attributes `alt`/`aria-label`/`title` (plus adapter extras). Our own `data-gta6ss-*` attributes are not observed, so the script never re-triggers itself.
+- One `MutationObserver` on the document watches `childList`, `characterData`, and the attributes `alt`/`aria-label`/`title` (plus adapter extras). Our own `data-spoileralert-*` attributes are not observed, so the script never re-triggers itself.
 - Added subtrees are scanned deeply. Text and attribute changes only re-check the enclosing containers.
 - Each checked container's fingerprint (its text plus the context flag) is stored in a `WeakMap`, which works as a processed-node set that also detects text changes. An unchanged container is skipped. Changed text (for example YouTube recycling a tile for a different video) is re-checked and un-hidden if it no longer matches.
 - Single-page navigation is handled through `yt-navigate-finish`, `popstate`, and a URL-change check on every scan.
