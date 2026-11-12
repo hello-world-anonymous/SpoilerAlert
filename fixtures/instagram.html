@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Instagram</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px auto; max-width: 480px; }
+  article { border: 1px solid #dbdbdb; border-radius: 8px; margin: 12px 0; padding: 10px; }
+  article img, .tile img { width: 100%; height: 120px; display: block; background: linear-gradient(45deg,#f58529,#dd2a7b,#8134af); border-radius: 4px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .grid a { display: block; }
+  .grid img { width: 100%; height: 80px; display: block; background: #c7c7c7; }
+</style>
+</head>
+<body>
+  <main role="main">
+    <article data-expect="blocked" data-name="post: image alt text">
+      <header><a href="#">gamer_news</a></header>
+      <img alt="Photo by gamer_news. May be an image of text that says 'GTA 6 JASON'" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      <div><span>no caption here</span></div>
+    </article>
+    <article data-expect="blocked" data-name="post: caption">
+      <header><a href="#">leaks_daily</a></header>
+      <img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      <div><h1>Big GTA VI leak today… Lucia fans brace yourselves #gta6</h1></div>
+      <a href="/p/xyz123/"><time>2h</time></a>
+    </article>
+    <article data-expect="visible" data-name="post: sunset">
+      <header><a href="#">traveller</a></header>
+      <img alt="Photo of a sunset at the beach" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      <div><h1>Golden hour in Miami</h1></div>
+    </article>
+
+    <h3>Explore grid</h3>
+    <div class="grid">
+      <a href="/p/abc/" data-expect="blocked" data-name="grid tile: alt GTA 6 ending"><img alt="GTA 6 ending reaction" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></a>
+      <a href="/reel/def/" data-expect="visible" data-name="grid tile: dog"><img alt="A dog playing fetch" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></a>
+      <a href="/reel/ghi/" id="late-alt" data-expect="visible" data-name="grid tile: alt set later"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></a>
+    </div>
+  </main>
+
+<script>
+  window.__GTA6SS_FORCE_ADAPTER = 'instagram';
+  window.FIXTURE_STEPS = [
+    ['alt text filled in after load (attribute mutation)', () => {
+      const a = document.getElementById('late-alt');
+      a.querySelector('img').setAttribute('alt', 'GTA6 secret character revealed');
+      a.setAttribute('data-expect', 'blocked');
+    }],
+  ];
+</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>perf fixture</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>ytd-rich-item-renderer { display: block; padding: 4px; } #contents { columns: 4; font: 12px sans-serif; }</style>
+</head>
+<body>
+  <div id="contents"></div>
+<script>
+  // 3,000 YouTube-style cards, every 20th a spoiler, then 50 batches of
+  // 40 more cards (infinite scroll). Every card carries an expectation.
+  window.__GTA6SS_FORCE_ADAPTER = 'youtube';
+  let n = 0;
+  function card() {
+    const i = n++;
+    const spoiler = i % 20 === 0;
+    const el = document.createElement('ytd-rich-item-renderer');
+    el.setAttribute('data-expect', spoiler ? 'blocked' : 'visible');
+    el.setAttribute('data-name', 'card ' + i);
+    el.innerHTML = '<a class="thumb"><img alt=""></a><a id="video-title" aria-label="video ' + i + '">' +
+      (spoiler ? 'GTA 6 ending leak #' + i : (i % 7 === 0 ? 'GTA 6 trailer #' + i : 'Unrelated video #' + i)) +
+      '</a><span class="meta">1.2M views · 3 days ago</span>';
+    return el;
+  }
+  const root = document.getElementById('contents');
+  for (let i = 0; i < 3000; i++) root.append(card());
+  window.FIXTURE_STEPS = [
+    ['infinite scroll: 50 batches of 40 cards', async () => {
+      for (let b = 0; b < 50; b++) {
+        for (let i = 0; i < 40; i++) root.append(card());
+        await new Promise((r) => setTimeout(r, 30));
+      }
+    }],
+  ];
+</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>

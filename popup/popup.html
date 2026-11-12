@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GTA 6 Spoiler Shield</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>GTA 6 Spoiler Shield</h1>
+    <label class="switch" title="Turn the shield on or off everywhere">
+      <input type="checkbox" id="enabled">
+      <span class="slider" aria-hidden="true"></span>
+      <span class="sr">Enabled</span>
+    </label>
+  </header>
+
+  <section class="row">
+    <label for="mode">Display mode</label>
+    <select id="mode">
+      <option value="blur">Blur, click to reveal</option>
+      <option value="collapse">Collapse / hide</option>
+      <option value="placeholder">Placeholder text</option>
+    </select>
+  </section>
+
+  <section class="stats" id="stats" aria-live="polite">
+    <div class="count"><span id="count">–</span></div>
+    <div class="count-label" id="count-label">items hidden on this page</div>
+    <div class="sub" id="sub"></div>
+  </section>
+
+  <button id="reveal" type="button" disabled>Reveal all for this tab session</button>
+
+  <footer>
+    <a href="#" id="options">Edit keywords and settings</a>
+  </footer>
+
+  <script src="../src/defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

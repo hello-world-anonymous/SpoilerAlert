@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Daily Example: news fixture</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>
+  body { font: 16px Georgia, serif; margin: 16px auto; max-width: 860px; color: #222; }
+  nav ul { display: flex; gap: 16px; list-style: none; padding: 0; }
+  .river { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .river li, figure { border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin: 0; }
+  .river a { font-weight: bold; color: #111; }
+  .pic { height: 80px; display: block; width: 100%; background: linear-gradient(90deg,#333,#999); }
+  .hero { margin: 16px 0; }
+  article.story { border-top: 3px solid #222; margin-top: 24px; }
+  article.story p { line-height: 1.6; }
+</style>
+</head>
+<body>
+  <nav><ul>
+    <li data-expect="visible" data-name="nav: Gaming"><a href="#">Gaming</a></li>
+    <li data-expect="visible" data-name="nav: Politics"><a href="#">Politics</a></li>
+  </ul></nav>
+
+  <div class="hero">
+    <h2 data-expect="blocked" data-name="hero headline (no card)"><a href="#">GTA VI plot twist leaked online</a></h2>
+    <p data-expect="visible" data-name="hero dek">Our gaming desk explains what happened.</p>
+  </div>
+
+  <ul class="river" id="river">
+    <li data-expect="blocked" data-name="river card: leak + Jason">
+      <img class="pic" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      <a href="#">GTA 6 leak reveals Jason's fate</a>
+      <p>Five things we learned.</p>
+    </li>
+    <li data-expect="visible" data-name="river card: release date">
+      <a href="#">GTA 6 release date confirmed for consoles</a>
+      <p>Rockstar confirmed the date on Tuesday.</p>
+    </li>
+    <li data-expect="visible" data-name="river card: election">
+      <a href="#">Election results: what the numbers say</a>
+    </li>
+    <li data-expect="visible" data-name="river card: GTA Online">
+      <a href="#">GTA Online summer update adds a new heist mission</a>
+    </li>
+  </ul>
+
+  <figure data-expect="blocked" data-name="figure: image alt">
+    <img class="pic" alt="Screenshot of the GTA 6 ending with Lucia" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+    <figcaption>Image: publisher handout</figcaption>
+  </figure>
+
+  <article class="story" data-expect="visible" data-name="long article itself (too big to be a card)">
+    <h1 data-expect="visible" data-name="article h1">GTA 6 review: a sprawling Vice City</h1>
+    <p data-expect="visible" data-name="para: neutral 1">FILLER</p>
+    <p data-expect="blocked" data-name="para: Lucia (topic from article)">Without giving too much away, Lucia makes a choice in the final act that recasts everything before it.</p>
+    <p data-expect="visible" data-name="para: neutral 2">FILLER</p>
+    <p data-expect="visible" data-name="para: weather">The weather system is the best we have seen in an open world.</p>
+  </article>
+
+<script>
+  window.__GTA6SS_FORCE_ADAPTER = 'generic';
+  const filler = 'The open world is dense with things to do, and the driving model has been rebuilt from the ground up. '.repeat(10);
+  for (const p of document.querySelectorAll('p')) if (p.textContent === 'FILLER') p.textContent = filler;
+  window.FIXTURE_STEPS = [
+    ['lazy-loaded river card', () => {
+      const li = document.createElement('li');
+      li.setAttribute('data-expect', 'blocked');
+      li.setAttribute('data-name', 'lazy card: Booby');
+      li.innerHTML = '<a href="#">Who is Booby? GTA 6 character guide</a>';
+      document.getElementById('river').append(li);
+    }],
+  ];
+</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>

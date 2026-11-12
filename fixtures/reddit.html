@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reddit - Dive into anything</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; background: #fff; color: #1c1c1c; }
+  shreddit-post, shreddit-comment { display: block; margin: 10px 0; }
+  shreddit-comment { margin-left: 20px; }
+  [slot="comment"] { padding: 6px 10px; border-left: 2px solid #ddd; }
+  h3 { color: #888; font-size: 12px; text-transform: uppercase; margin-top: 20px; }
+</style>
+<script>
+  // Stand-in for Reddit's web component: real (open) shadow DOM with slots.
+  customElements.define('shreddit-post', class extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' }).innerHTML =
+        '<style>:host{display:block;border:1px solid #ccc;border-radius:12px;padding:12px}' +
+        '.sub{color:#576f76;font-size:12px}.img{height:60px;margin-top:8px;border-radius:8px;background:linear-gradient(90deg,#ff4500,#ffb000)}</style>' +
+        '<div class="sub" part="sub"></div><slot name="title"></slot><slot></slot><div class="img"></div>';
+    }
+    connectedCallback() {
+      this.shadowRoot.querySelector('.sub').textContent = this.getAttribute('subreddit-prefixed-name') || '';
+    }
+  });
+</script>
+</head>
+<body>
+  <h3>Home feed</h3>
+  <shreddit-post data-expect="blocked" data-name="post: title attribute only"
+    post-title="GTA 6 leak: Lucia's backstory" subreddit-prefixed-name="r/gaming">
+    <a slot="title" href="#">[spoiler-free title in slot]</a>
+  </shreddit-post>
+
+  <shreddit-post data-expect="blocked" data-name="post in r/GTA6, no topic in title"
+    post-title="Is this the final mission?" subreddit-prefixed-name="r/GTA6">
+    <a slot="title" href="#">Is this the final mission?</a>
+  </shreddit-post>
+
+  <shreddit-post data-expect="visible" data-name="post: preorder date"
+    post-title="GTA 6 preorder date announced" subreddit-prefixed-name="r/gaming">
+    <a slot="title" href="#">GTA 6 preorder date announced</a>
+    <div class="md">Mark your calendars.</div>
+  </shreddit-post>
+
+  <shreddit-post data-expect="visible" data-name="post: unrelated"
+    post-title="My cat is dead tired" subreddit-prefixed-name="r/cats">
+    <a slot="title" href="#">My cat is dead tired</a>
+  </shreddit-post>
+
+  <h3>Comments</h3>
+  <shreddit-comment>
+    <div slot="comment" id="cm-parent" data-expect="visible" data-name="parent comment body">Great write-up, thanks</div>
+    <shreddit-comment>
+      <div slot="comment" data-expect="blocked" data-name="child comment with own topic">GTA6 spoiler: Jason betrays everyone</div>
+    </shreddit-comment>
+    <shreddit-comment>
+      <div slot="comment" id="cm-ctx" data-expect="visible" data-name="child comment, topic only from URL">Raul is the villain</div>
+    </shreddit-comment>
+  </shreddit-comment>
+
+<script>
+  window.__GTA6SS_FORCE_ADAPTER = 'reddit';
+  window.FIXTURE_STEPS = [
+    ['SPA navigation into an r/GTA6 thread (pushState)', () => {
+      history.pushState({}, '', '/r/GTA6/comments/abc123/who_is_the_villain/');
+      // Reddit re-renders on navigation; any DOM change triggers the URL check.
+      const c = document.createElement('shreddit-comment');
+      c.innerHTML = '<div slot="comment" data-expect="visible" data-name="new comment after nav">welcome</div>';
+      document.body.append(c);
+      document.getElementById('cm-ctx').setAttribute('data-expect', 'blocked');
+    }],
+  ];
+</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>

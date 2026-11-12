@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GTA 6 Lucia ending theory - YouTube</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; background: #0f0f0f; color: #f1f1f1; }
+  ytd-app, ytd-watch-metadata, ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer,
+  ytd-reel-item-renderer, ytm-shorts-lockup-view-model, ytd-comment-view-model, #secondary, #contents { display: block; }
+  ytd-rich-item-renderer, ytd-compact-video-renderer, ytd-video-renderer, ytd-reel-item-renderer,
+  ytm-shorts-lockup-view-model, ytd-comment-view-model { margin: 8px 0; padding: 10px; border-radius: 10px; background: #272727; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .thumb { width: 100%; height: 90px; background: linear-gradient(135deg, #ff0080, #7928ca); border-radius: 8px; display: block; }
+  #video-title { font-weight: 600; display: block; margin-top: 6px; color: #fff; text-decoration: none; }
+  h3 { color: #aaa; font-size: 12px; text-transform: uppercase; margin-top: 20px; }
+</style>
+</head>
+<body>
+<ytd-app>
+  <h3>Watch page</h3>
+  <ytd-watch-metadata data-expect="blocked" data-name="watch metadata">
+    <h1><yt-formatted-string>GTA 6 Lucia ending theory</yt-formatted-string></h1>
+    <div id="description">Breaking down everything we know.</div>
+  </ytd-watch-metadata>
+
+  <h3>Sidebar (#secondary)</h3>
+  <div id="secondary">
+    <ytd-compact-video-renderer id="c1" data-expect="visible" data-expect-strict="blocked" data-name="sidebar: trailer breakdown">
+      <a class="thumb"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></a>
+      <span id="video-title">GTA 6 trailer 3 breakdown</span>
+    </ytd-compact-video-renderer>
+    <ytd-compact-video-renderer id="c2" data-expect="blocked" data-name="sidebar: leak Jason">
+      <a class="thumb"></a>
+      <span id="video-title">GTA 6 leak: Jason&#8217;s fate revealed</span>
+    </ytd-compact-video-renderer>
+    <ytd-compact-video-renderer id="c3" data-expect="visible" data-name="sidebar: GTA 5 ending">
+      <a class="thumb"></a>
+      <span id="video-title">GTA 5 ending explained: Michael dies?</span>
+    </ytd-compact-video-renderer>
+  </div>
+
+  <h3>Home grid (ytd-rich-item-renderer)</h3>
+  <div id="contents" class="grid">
+    <ytd-rich-item-renderer data-expect="blocked" data-name="grid: thumbnail alt only">
+      <a class="thumb-link"><img class="thumb" alt="GTA VI plot twist" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></a>
+      <a id="video-title">You won't believe this</a>
+    </ytd-rich-item-renderer>
+    <ytd-rich-item-renderer data-expect="blocked" data-name="grid: aria-label only">
+      <a class="thumb"></a>
+      <a id="video-title-link" aria-label="GTA6 secret mission by Some Channel 1M views"><span id="video-title">Watch till the end</span></a>
+    </ytd-rich-item-renderer>
+    <ytd-rich-item-renderer data-expect="visible" data-name="grid: pasta">
+      <a class="thumb"></a>
+      <a id="video-title">Cooking pasta in 10 minutes</a>
+    </ytd-rich-item-renderer>
+  </div>
+
+  <h3>Search results</h3>
+  <ytd-video-renderer data-expect="blocked" data-name="search: description snippet">
+    <a class="thumb"></a>
+    <a id="video-title">My reaction</a>
+    <yt-formatted-string class="metadata-snippet-text">Everything about GTA 6 and Raúl</yt-formatted-string>
+  </ytd-video-renderer>
+
+  <h3>Shorts</h3>
+  <ytd-reel-item-renderer data-expect="blocked" data-name="shorts: #GTA6 Booby">
+    <span id="video-title">#GTA6 Booby is back</span>
+  </ytd-reel-item-renderer>
+  <ytm-shorts-lockup-view-model data-expect="visible" data-expect-strict="blocked" data-name="shorts: price">
+    <h3 class="shortsLockupViewModelHostMetadataTitle"><span>GTA 6 price predictions</span></h3>
+  </ytm-shorts-lockup-view-model>
+
+  <h3>Comments (topic comes from the video title)</h3>
+  <ytd-comment-view-model id="cm1" data-expect="blocked" data-name="comment: Lucia dies (context)">
+    <span id="content-text">Lucia dies at the end?? no way</span>
+  </ytd-comment-view-model>
+  <ytd-comment-view-model id="cm2" data-expect="visible" data-expect-strict="blocked" data-name="comment: first">
+    <span id="content-text">first!</span>
+  </ytd-comment-view-model>
+</ytd-app>
+
+<script>
+  window.__GTA6SS_FORCE_ADAPTER = 'youtube';
+  const $ = (s) => document.querySelector(s);
+  window.FIXTURE_STEPS = [
+    ['infinite scroll: new card appended', () => {
+      const el = document.createElement('ytd-rich-item-renderer');
+      el.setAttribute('data-expect', 'blocked');
+      el.setAttribute('data-name', 'appended: Cal and Jason');
+      el.innerHTML = '<a class="thumb"></a><a id="video-title">GTA 6: Cal and Jason heist</a>';
+      $('#contents').append(el);
+    }],
+    ['recycled nodes: titles swapped in place', () => {
+      $('#c1 #video-title').textContent = 'GTA 6 ending leaked';
+      $('#c1').setAttribute('data-expect', 'blocked');
+      $('#c1').removeAttribute('data-expect-strict');
+      $('#c2 #video-title').firstChild.data = 'Pasta recipe';
+      $('#c2').setAttribute('data-expect', 'visible');
+    }],
+    ['click a blurred card reveals it', () => {
+      $('#c1').click();
+      $('#c1').setAttribute('data-expect', 'revealed');
+    }],
+    ['SPA navigation (yt-navigate-finish) to a non-GTA video', () => {
+      document.title = 'Pasta tutorial - YouTube';
+      document.dispatchEvent(new Event('yt-navigate-finish'));
+      $('#cm1').setAttribute('data-expect', 'visible');
+      $('#cm2').removeAttribute('data-expect-strict');
+    }],
+  ];
+</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>

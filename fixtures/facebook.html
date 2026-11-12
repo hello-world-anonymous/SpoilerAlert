@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Facebook</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>
+  body { font: 15px system-ui, sans-serif; margin: 16px auto; max-width: 560px; background: #f0f2f5; }
+  [aria-posinset] { margin: 12px 0; }
+  [role="article"] { background: #fff; border-radius: 8px; padding: 12px; }
+  [role="article"] [role="article"] { background: #f0f2f5; margin: 6px 0 0 24px; padding: 8px; border-radius: 16px; }
+  .media { height: 100px; border-radius: 6px; background: linear-gradient(120deg,#1877f2,#42b72a); margin: 8px 0; }
+</style>
+</head>
+<body>
+  <div role="feed">
+    <div aria-posinset="1" data-expect="visible" data-name="feed unit wrapper 1">
+      <div role="article" data-expect="visible" data-name="post: trailer reaction (no spoiler term)">
+        <h4>Gaming Hub</h4>
+        <div dir="auto">GTA 6 trailer reaction thread, drop your thoughts</div>
+        <div class="media"></div>
+        <div role="article" data-expect="blocked" data-name="comment: Lucia dies (topic from parent post)">
+          <span dir="auto">Lucia dies at the end, calling it now</span>
+        </div>
+        <div role="article" data-expect="visible" data-name="comment: hyped">
+          <span dir="auto">So hyped!!</span>
+        </div>
+      </div>
+    </div>
+
+    <div aria-posinset="2" data-expect="visible" data-name="feed unit wrapper 2">
+      <div role="article" id="post2" data-expect="blocked" data-name="post: secret ending leaked">
+        <h4>Leaks Page</h4>
+        <div dir="auto">GTA 6 secret ending leaked?!</div>
+        <img alt="May be an image of a car" class="media" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+        <div role="article" data-expect="visible" data-name="comment: nice (inside blocked post)">
+          <span dir="auto">nice</span>
+        </div>
+        <div role="article" id="c-jason" data-expect="visible" data-name="comment: Jason (covered by blocked post)">
+          <span dir="auto">Jason does not make it out</span>
+        </div>
+      </div>
+    </div>
+
+    <div aria-posinset="3" data-expect="visible" data-name="feed unit wrapper 3">
+      <div role="article" data-expect="blocked" data-name="post: photo alt text only">
+        <h4>Some Friend</h4>
+        <img alt="May be an image of text that says 'GTA VI: Booby is dead'" class="media" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      </div>
+    </div>
+  </div>
+
+<script>
+  window.__GTA6SS_FORCE_ADAPTER = 'facebook';
+  window.FIXTURE_STEPS = [
+    ['reveal post: its comments are now judged on their own', () => {
+      document.getElementById('post2').click();
+      document.getElementById('post2').setAttribute('data-expect', 'revealed');
+      document.getElementById('c-jason').setAttribute('data-expect', 'blocked');
+    }],
+  ];
+</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>

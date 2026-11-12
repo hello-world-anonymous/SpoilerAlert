@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>old reddit fixture</title>
+<link rel="stylesheet" href="../src/content.css">
+<style>
+  body { font: 13px verdana, sans-serif; margin: 16px; }
+  .thing { margin: 8px 0; }
+  .thing.link { padding: 6px; background: #f8f8ff; }
+  .child { margin-left: 24px; border-left: 1px dotted #ccc; padding-left: 8px; }
+  a.title { color: #0000ff; font-size: 15px; }
+  .tagline { color: #888; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div id="siteTable">
+    <div class="thing link" data-subreddit="GTA6" data-expect="blocked" data-name="link in r/GTA6: final mission">
+      <div class="entry"><a class="title" href="#">Final mission thoughts</a><p class="tagline">submitted by someone to r/GTA6</p></div>
+    </div>
+    <div class="thing link" data-subreddit="pics" data-expect="visible" data-name="link in r/pics">
+      <div class="entry"><a class="title" href="#">My cat sleeping</a></div>
+    </div>
+    <div class="thing link" data-subreddit="gaming" data-expect="blocked" data-name="link: GTA VI twist">
+      <div class="entry"><a class="title" href="#">GTA VI story twist explained</a></div>
+    </div>
+  </div>
+
+  <div class="commentarea">
+    <div class="thing comment">
+      <div class="entry" data-expect="blocked" data-name="parent comment entry"><p class="tagline">user1</p><div class="usertext-body"><div class="md"><p>GTA 6 ending leaked, Lucia dies</p></div></div></div>
+      <div class="child">
+        <div class="thing comment">
+          <div class="entry" data-expect="visible" data-name="child comment entry"><p class="tagline">user2</p><div class="usertext-body"><div class="md"><p>lol ok</p></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>window.__GTA6SS_FORCE_ADAPTER = 'reddit';</script>
+<script src="harness/chrome-shim.js"></script>
+<script src="../src/defaults.js"></script>
+<script src="../src/matcher.js"></script>
+<script src="../src/adapters.js"></script>
+<script src="../src/content.js"></script>
+<script src="harness/runner.js"></script>
+</body>
+</html>
