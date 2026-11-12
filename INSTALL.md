@@ -8,7 +8,7 @@ SpoilerAlert is a free Chrome extension that blurs spoilers for whatever you cho
 
 ## Step 1: Download it
 
-1. Go to **https://github.com/hello-world-anonymous/gta6-spoiler-shield**
+1. Go to **https://github.com/hello-world-anonymous/SpoilerAlert**
 2. Click the green **Code** button, then **Download ZIP**.
 
 You don't need a GitHub account.
