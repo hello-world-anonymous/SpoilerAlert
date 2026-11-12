@@ -50,6 +50,22 @@
     <a slot="title" href="#">My cat is dead tired</a>
   </shreddit-post>
 
+  <h3>Search results</h3>
+  <search-telemetry-tracker style="display:block;margin:10px 0" data-expect="blocked" data-name="search card: gameplay footage (reported case)">
+    <div data-testid="search-post-unit">
+      <span>r/GTA6 · 2h</span>
+      <a data-testid="post-title-text" href="/r/GTA6/comments/1xtrx0p/breaking_new_gta_6_gameplay_footage_just_dropped/">BREAKING: New GTA 6 gameplay footage just dropped</a>
+      <span>4.1K votes · 900 comments</span>
+    </div>
+  </search-telemetry-tracker>
+  <search-telemetry-tracker style="display:block;margin:10px 0" data-expect="blocked" data-name="search card: tracker only (no data-testid)">
+    <div><a href="/r/gaming/comments/abc/gta_vi_leak/">GTA VI leak megathread</a></div>
+  </search-telemetry-tracker>
+  <search-telemetry-tracker style="display:block;margin:10px 0" data-expect="visible" data-name="search card: price news">
+    <div><a href="/r/gaming/comments/def/gta_6_price/">GTA 6 price announced</a></div>
+  </search-telemetry-tracker>
+  <div><a data-testid="post-title-text" href="/r/x/comments/1/" data-expect="blocked" data-name="bare title link, no card">GTA 6 ending leaked</a></div>
+
   <h3>Comments</h3>
   <shreddit-comment>
     <div slot="comment" id="cm-parent" data-expect="visible" data-name="parent comment body">Great write-up, thanks</div>

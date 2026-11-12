@@ -60,7 +60,11 @@
     hosts: [/(^|\.)reddit\.com$/],
     units: [
       // new Reddit (shreddit web components)
-      'shreddit-post', 'shreddit-comment > [slot="comment"]', '[data-testid="search-post-unit"]',
+      'shreddit-post', 'shreddit-comment > [slot="comment"]',
+      // search results: card wrappers first, then the title link as a last resort
+      '[data-testid="search-post-unit"]', '[data-testid="sdui-post-unit"]',
+      'search-telemetry-tracker:has(a[href*="/comments/"])',
+      'a[data-testid="post-title-text"]', 'a[data-testid="post-title"]',
       'reddit-pdp-right-rail-post', 'community-highlight-card',
       // old.reddit.com
       '.thing.link', '.thing.comment > .entry', '.search-result',

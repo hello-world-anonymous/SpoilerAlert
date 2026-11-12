@@ -109,7 +109,7 @@ No `tabs`, `activeTab`, `webRequest`, `history` or `cookies` permission is used.
 
 ## Defaults chosen where the spec was open
 
-- Extra default spoiler terms beyond the spec: `spoiler`, `death`, `betrayal`, `cutscene`, `storyline`. The always-block list starts empty.
+- Extra default spoiler terms beyond the spec: `spoiler`, `death`, `betrayal`, `cutscene`, `storyline`, plus leaked-material wording: `footage`, `gameplay`, `datamine(d)`, `early copy`, `insider`. These also hide official "gameplay trailer" posts; remove them in Options if you only care about story spoilers. The always-block list starts empty.
 - Topic variants: GTA 6 / GTA6 / GTA-6 / GTA VI / GTAVI / GTA Six / Grand Theft Auto 6 / VI / Six.
 - "Same element" means the same card-like container (title + description + alt text of one video tile counts as one element).
 - Context topic: comments under a GTA 6 video, comments in a GTA 6 Reddit thread, posts on r/GTA6, comments under a GTA 6 Facebook post, and paragraphs inside a long GTA 6 article only need a spoiler term.

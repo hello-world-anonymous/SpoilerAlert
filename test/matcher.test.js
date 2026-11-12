@@ -37,6 +37,12 @@ test('topic variants and case/spacing insensitivity', () => {
   ]) assert.equal(blocked(m, t), true, t);
 });
 
+test('leaked-footage wording counts as a spoiler', () => {
+  assert.equal(blocked(m, 'BREAKING: New GTA 6 gameplay footage just dropped'), true);
+  assert.equal(blocked(m, 'GTA 6 datamined map'), true);
+  assert.equal(blocked(m, 'GTA 6 price announced'), false);
+});
+
 test('diacritics in spoiler terms', () => {
   assert.equal(blocked(m, 'GTA 6: Lúcía’s fate'), true);
   assert.equal(blocked(m, 'GTA 6 Raúl'), true);

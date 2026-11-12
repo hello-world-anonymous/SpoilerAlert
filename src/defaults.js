@@ -24,6 +24,8 @@
       'killed', 'kills', 'ending', 'leak', 'leaked', 'plot', 'twist',
       'dies', 'dead', 'secret', 'mission', 'character',
       'spoiler', 'death', 'betrayal', 'cutscene', 'storyline',
+      // leaked-material wording ("new gameplay footage just dropped")
+      'footage', 'gameplay', 'datamine', 'datamined', 'early copy', 'insider',
     ],
     alwaysBlock: [],
     excludeTerms: [
