@@ -62,6 +62,8 @@
 
   /** Visible text + alt/aria-label/title of el, skipping our UI and (optionally) nested units. */
   function ownText(el) {
+    const custom = adapter.textOf ? adapter.textOf(el) : null;
+    if (custom != null) return String(custom).slice(0, MAX_TEXT);
     const parts = [];
     let len = 0;
     const pushAttrs = (e) => {
@@ -173,7 +175,15 @@
       return;
     }
 
-    const isUnit = el.matches(adapter.unitSelector);
+    const isUnit = el.matches(adapter.unitSelector) && (!adapter.acceptUnit || adapter.acceptUnit(el));
+
+    if (!isUnit && !(adapter.blockSelector && el.matches(adapter.blockSelector))) {
+      // Matched a unit selector but the adapter rejected it (e.g. a Reddit
+      // wrapper around many results); its inner cards are judged instead.
+      if (state === 'blocked') clear(el);
+      seen.delete(el);
+      return;
+    }
 
     // Generic text blocks are only judged when no eligible card encloses them.
     if (!isUnit) {

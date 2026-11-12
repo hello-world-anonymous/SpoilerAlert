@@ -15,6 +15,10 @@
  *   context(el)   optional; returns an Element or string describing what the
  *                 unit sits inside. If that context mentions GTA 6, the unit only
  *                 needs a spoiler term (e.g. a comment under a GTA 6 video).
+ *   acceptUnit(el) optional; return false to treat a selector match as "not a
+ *                 card" (its inner cards are judged instead)
+ *   textOf(el)    optional; return a string to use as the unit's text instead
+ *                 of its full visible text + attributes (null = default)
  *   spaEvents     DOM events that signal single-page navigation
  */
 (function (root) {
@@ -55,23 +59,54 @@
     spaEvents: ['yt-navigate-finish', 'yt-page-data-updated'],
   };
 
+  const REDDIT_SEARCH_CARD =
+    '[data-testid="search-post-unit"], [data-testid="sdui-post-unit"], search-telemetry-tracker, .search-result';
+  const REDDIT_TITLE_LINK = 'a[href*="/comments/"], a.search-title';
+
+  /** Distinct post ids linked inside el (title, thumbnail and comment links share one id). */
+  function redditPostIds(el) {
+    const ids = new Set();
+    for (const a of el.querySelectorAll('a[href*="/comments/"]')) {
+      const m = /\/comments\/([a-z0-9]+)/i.exec(a.getAttribute('href') || '');
+      if (m) ids.add(m[1].toLowerCase());
+    }
+    return ids;
+  }
+
   const reddit = {
     id: 'reddit',
     hosts: [/(^|\.)reddit\.com$/],
     units: [
       // new Reddit (shreddit web components)
       'shreddit-post', 'shreddit-comment > [slot="comment"]',
-      // search results: card wrappers first, then the title link as a last resort
-      '[data-testid="search-post-unit"]', '[data-testid="sdui-post-unit"]',
-      'search-telemetry-tracker:has(a[href*="/comments/"])',
+      // search results (see REDDIT_SEARCH_CARD): card wrappers, then the bare title link
+      REDDIT_SEARCH_CARD,
       'a[data-testid="post-title-text"]', 'a[data-testid="post-title"]',
       'reddit-pdp-right-rail-post', 'community-highlight-card',
       // old.reddit.com
-      '.thing.link', '.thing.comment > .entry', '.search-result',
+      '.thing.link', '.thing.comment > .entry',
     ],
     maxUnitText: Infinity,
     excludeNested: false,
     attrs: ['post-title', 'subreddit-prefixed-name', 'data-subreddit'],
+    // A search wrapper only counts as a card when it holds exactly one post.
+    // Reddit also wraps whole result lists in search-telemetry-tracker; treating
+    // those as one card would blur every result at once.
+    acceptUnit(el) {
+      if (!el.matches(REDDIT_SEARCH_CARD)) return true;
+      return redditPostIds(el).size === 1;
+    },
+    // Search results are judged by their title (plus thumbnail alt text) only,
+    // not by the subreddit name, snippet, vote counts or the search query.
+    textOf(el) {
+      if (!el.matches(REDDIT_SEARCH_CARD)) return null;
+      const parts = [];
+      for (const a of el.querySelectorAll(REDDIT_TITLE_LINK)) {
+        parts.push(a.textContent, a.getAttribute('aria-label') || '', a.getAttribute('title') || '');
+      }
+      for (const img of el.querySelectorAll('img[alt]')) parts.push(img.getAttribute('alt'));
+      return parts.join(' ');
+    },
     // The URL names the subreddit and, on comment pages, the post title slug
     // (/r/GTA6/comments/abc/lucia_ending_explained/), so comments on r/GTA6 or
     // under a GTA 6 thread only need a spoiler term. Posts carry their own

@@ -27,7 +27,9 @@
       // leaked-material wording ("new gameplay footage just dropped")
       'footage', 'gameplay', 'datamine', 'datamined', 'early copy', 'insider',
     ],
-    alwaysBlock: [],
+    // Hidden on their own, no "GTA 6" needed. "Cyber Leek" also matches
+    // "cyberleek" and "@cyberleek" (spaces inside a term are optional).
+    alwaysBlock: ['Cyber Leek'],
     excludeTerms: [
       'GTA 5', 'GTA V', 'Grand Theft Auto V', 'GTA Online', 'GTA San Andreas',
       'GTA IV', 'GTA 4', 'GTA Vice City',

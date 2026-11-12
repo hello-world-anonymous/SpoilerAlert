@@ -66,6 +66,27 @@
   </search-telemetry-tracker>
   <div><a data-testid="post-title-text" href="/r/x/comments/1/" data-expect="blocked" data-name="bare title link, no card">GTA 6 ending leaked</a></div>
 
+  <h3>Search results inside one list-level tracker (page searched "gta 6 leak")</h3>
+  <search-telemetry-tracker style="display:block" data-expect="visible" data-name="list wrapper: must NOT blur everything">
+    <div data-testid="search-post-unit" data-expect="blocked" data-name="list card: GTA 6 leak title">
+      <span>r/GamingLeaksAndRumours</span>
+      <a href="/r/GamingLeaksAndRumours/comments/l1/x/"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></a>
+      <a data-testid="post-title-text" href="/r/GamingLeaksAndRumours/comments/l1/x/">Huge GTA 6 leak hits the internet</a>
+      <a href="/r/GamingLeaksAndRumours/comments/l1/x/#comments">812 comments</a>
+    </div>
+    <div data-testid="search-post-unit" data-expect="visible" data-name="list card: neutral title in r/GTA6, leak only in snippet">
+      <span>r/GTA6</span>
+      <a data-testid="post-title-text" href="/r/GTA6/comments/l2/y/">GTA 6 trailer 3 reactions thread</a>
+      <p class="snippet">someone already posted the leak and a mission list in the comments</p>
+    </div>
+    <div data-testid="search-post-unit" data-expect="visible" data-name="list card: price">
+      <a data-testid="post-title-text" href="/r/gaming/comments/l3/z/">GTA 6 price announced</a>
+    </div>
+    <div data-testid="search-post-unit" data-expect="blocked" data-name="list card: Cyberleek (always-block)">
+      <a data-testid="post-title-text" href="/r/gaming/comments/l4/w/">New post from @cyberleek</a>
+    </div>
+  </search-telemetry-tracker>
+
   <h3>Comments</h3>
   <shreddit-comment>
     <div slot="comment" id="cm-parent" data-expect="visible" data-name="parent comment body">Great write-up, thanks</div>

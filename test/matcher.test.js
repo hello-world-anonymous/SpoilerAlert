@@ -43,6 +43,13 @@ test('leaked-footage wording counts as a spoiler', () => {
   assert.equal(blocked(m, 'GTA 6 price announced'), false);
 });
 
+test('default always-block list hides the Cyber Leek leaker', () => {
+  for (const t of ['New post from @cyberleek', 'CyberLeek strikes again', 'cyber leek', 'Cyber-Leek thread']) {
+    assert.equal(m.test(t).reason, 'always-block', t);
+  }
+  assert.equal(blocked(m, 'cyber security leek soup'), false);
+});
+
 test('diacritics in spoiler terms', () => {
   assert.equal(blocked(m, 'GTA 6: Lúcía’s fate'), true);
   assert.equal(blocked(m, 'GTA 6 Raúl'), true);
